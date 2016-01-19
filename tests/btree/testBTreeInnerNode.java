@@ -7,10 +7,6 @@ import org.junit.Test;
 
 public class testBTreeInnerNode {
 
-	@Before
-	public void setUp() throws Exception {
-	}
-
 	@Test
 	public void testBTreeNode() {
 		
@@ -44,12 +40,7 @@ public class testBTreeInnerNode {
 		String a = actual.payload;
 		assertEquals("Testing", a);
 	}
-
 	
-	/**
-	 * Test the sorted-insert - make sure smaller keys get insert in the front
-	 * and that payloads get shifted too
-	 */
 	@Test
 	public void testInsert2() {
 		BTreeInnerNode node = new BTreeInnerNode( true, 4, null );
@@ -75,7 +66,6 @@ public class testBTreeInnerNode {
 		String a = actual.payload;
 		assertEquals("Still Testing", a);
 	}
-
 	
 	@Test
 	public void testInsert3( ) {
@@ -149,7 +139,6 @@ public class testBTreeInnerNode {
 		assertEquals("fourty", ((BTreeDataNode)(((BTreeInnerNode) right).children.get(1))).payload);
 		
 	}
-	
 	
 	@Test
 	public void testInsert5( ) {
