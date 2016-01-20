@@ -8,4 +8,6 @@ public abstract class BTreeNode {
 	{
 		this.parent = parent;
 	}
+	
+	abstract protected Object find(long key);
 }

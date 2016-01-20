@@ -350,4 +350,49 @@ public class BTreeInnerNode extends BTreeNode {
 			split( );
 		}
 	}
+	
+	/**
+	 * Find the value associated with the given key
+	 */
+	protected Object find(long key)
+	{
+		if (leaf) {
+			for (int i = 0; i < keys.size(); i++)
+			{
+				long childKey = keys.get(i);
+				if (key == childKey) {
+					BTreeNode child = children.get(i);
+					if (child instanceof BTreeDataNode) return ((BTreeDataNode) child).payload;
+					else return child.find(key);
+				}
+			}
+			return null;
+		}
+		else {
+			if (key < keys.get(0)) 
+				return children.get(0).find(key);
+			
+			if (key == keys.get(0))
+				return children.get(1).find(key);
+			
+			for (int i = 1; i < keys.size(); i++)
+			{
+				if (key == keys.get(i)) 
+					return children.get((2 * i) + 1).find(key);
+				
+				if ((key > keys.get(i-1)) && (key < keys.get(i)))
+				{
+					return children.get(2 * i).find(key);
+				}
+			}
+			
+			int lastChild = 2 * keys.size();
+			if (keys.get( keys.size()-1) == key) 
+				return children.get(lastChild-1).find(key);
+			
+			return children.get( lastChild ).find(key);
+		}
+	}
+
+	
 }
