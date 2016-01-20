@@ -20,5 +20,9 @@ public class BTreeDataNode<T> extends BTreeNode {
 		return payload;
 	}
 	
-	
+
+	protected Object find(long key)
+	{
+		return payload;
+	}
 }

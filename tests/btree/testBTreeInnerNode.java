@@ -266,4 +266,30 @@ public class testBTreeInnerNode {
 		assertEquals(85, (long) ((BTreeDataNode)(node85.children.get(0))).payload);
 		
 	}
+	
+	@Test
+	public void testfind( )
+	{
+		long keys[] = { 10, 20, 30, 40, 50, 60, 25, 35, 45, 55, 65, 75, 85 };
+		
+		BTreeInnerNode root = new BTreeInnerNode(true, 3, null);
+		for (int i = 0; i < keys.length; i++)
+		{
+			root.insert(keys[i], new BTreeDataNode<Long>(root, keys[i]));
+			
+			// detect split roots
+			if (root.parent != null) root = root.parent;
+		}
+		
+		
+		for (int i = 0; i < keys.length; i++)
+		{
+			Object O = root.find(keys[i]);
+			
+			if (! (O instanceof Long)) fail();
+			Long L = (Long) O;
+			if (L != keys[i]) fail();
+		}
+		
+	}
 }
