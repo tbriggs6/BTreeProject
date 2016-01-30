@@ -25,7 +25,7 @@ public class TestLeafNode {
 		assertEquals(leaf.maxEntries, 3);
 		assertTrue(leaf.children.size() == 0);
 		assertTrue(leaf.isEmpty());
-		assertFalse(leaf.isFull());
+		assertFalse(leaf.isOverCapacity());
 	}
 
 	
@@ -37,15 +37,15 @@ public class TestLeafNode {
 		leaf.insert(new Long(555), "Test1");
 		assertTrue(leaf.children.size() == 1);
 		assertFalse(leaf.isEmpty());
-		assertFalse(leaf.isFull());
+		assertFalse(leaf.isOverCapacity());
 		
 		leaf.insert(new Long(666), "Test2");
 		assertTrue(leaf.children.size() == 2);
-		assertFalse(leaf.isFull());
+		assertFalse(leaf.isOverCapacity());
 		
 		leaf.insert(new Long(777), "Test3");
 		assertTrue(leaf.children.size() == 3);
-		assertTrue(leaf.isFull());
+		assertTrue(leaf.isComplete());
 	}
 	
 	@Test
@@ -94,6 +94,15 @@ public class TestLeafNode {
 		assertEquals(first.key, (Long) ((long) 666));
 	}
 	
+	@Test
+	public void testDelete2( ) {
+		node.delete(new Long(555));
+		node.delete(new Long(666));
+		node.delete(new Long(777));
+		
+		assertTrue(node.isEmpty());
+	}
+
 	
 	
 	@Test

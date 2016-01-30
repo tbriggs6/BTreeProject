@@ -249,5 +249,197 @@ public class TestBTree {
 		}
 		
 	}
+	
+	
+	@Test
+	public void testDelete1( )
+	{
+		BTree<Long,String> T = new BTree<Long, String>(3);
+		T.insert(new Long(10), "Ten");
+		
+		T.delete(new Long(10));
+		
+		assert(T.root == null);
+	}
+	
+	@Test
+	public void testDelete2( )
+	{
+		BTree<Long,String> T = new BTree<Long, String>(3);
+		T.insert(new Long(10), "Ten");
+		T.insert(new Long(20), "Twenty");
+		
+		T.delete(new Long(10));
+		
+		assert(T.root != null);
+		LeafNode<Long,String> leaf = (LeafNode<Long,String>) T.root;
+		assertEquals(1, leaf.children.size());
+		
+		T.delete(new Long(20));
+		assert(T.root == null);
+		
+	}
+	
+	@Test
+	public void testDelete3( )
+	{
+		BTree<Long,String> T = new BTree<Long, String>(3);
+		T.insert(new Long(10), "Ten");
+		T.insert(new Long(20), "Twenty");
+		T.insert(new Long(40), "Fourty");
+		T.insert(new Long(50), "Fifty");
+
+		//         40
+		// 10  20     40 50
+		
+		T.delete(new Long(10));
+		
+		// this will roll up the left child (10,20) node
+		// and should then pull-up the right child into roo
+		T.delete(new Long(20));
+
+		LeafNode<Long,String> root = (LeafNode<Long, String>) T.root;
+		assertTrue(root.children.size() == 2);
+		assertEquals(40, (long) root.children.get(0).key);
+		assertEquals(50, (long) root.children.get(1).key);
+	}
+	
+	@Test
+	public void testDelete4( )
+	{
+		BTree<Long,String> T = new BTree<Long, String>(3);
+		T.insert(new Long(10), "Ten");
+		T.insert(new Long(20), "Twenty");
+		T.insert(new Long(40), "Fourty");
+		T.insert(new Long(50), "Fifty");
+		T.insert(new Long(60), "Sixty");
+		T.insert(new Long(70), "Seventy");
+
+		//         40       60
+		// 10  20     40 50     60 70
+		
+		
+		// this will roll up the left child (10,20) node
+		// and should then pull-up the right child into roo
+		T.delete(new Long(10));
+		T.delete(new Long(20));
+
+		//         60
+		//  40 50     60 70
+
+		
+		InnerNode<Long,String> root = (InnerNode<Long,String>) T.root;
+		assertEquals(60, (long) root.keys.get(0));
+		
+		LeafNode<Long,String> left = (LeafNode<Long,String>) root.children.get(0);
+		LeafNode<Long,String> right = (LeafNode<Long,String>) root.children.get(1);
+		
+		assertEquals(60, (long) root.keys.get(0));
+		
+		assertEquals(40, (long) left.children.get(0).key);
+		assertEquals(50, (long) left.children.get(1).key);
+		
+		assertEquals(60, (long) right.children.get(0).key);
+		assertEquals(70, (long) right.children.get(1).key);
+		
+		
+	}
+	
+	@Test
+	public void testDelete5( )
+	{
+		BTree<Long,String> T = new BTree<Long, String>(3);
+		T.insert(new Long(10), "Ten");
+		T.insert(new Long(20), "Twenty");
+		T.insert(new Long(40), "Fourty");
+		T.insert(new Long(50), "Fifty");
+		T.insert(new Long(60), "Sixty");
+		T.insert(new Long(70), "Seventy");
+
+		//         40       60
+		// 10  20     40 50     60 70
+		
+		
+		// this will roll up the left child (10,20) node
+		// and should then pull-up the right child into roo
+		T.delete(new Long(10));
+		T.delete(new Long(20));
+
+		//         60
+		//  40 50     60 70
+
+		T.delete(new Long(40));
+		T.delete(new Long(50));
+
+		
+		//  60 70
+
+		// this should alter the root
+		LeafNode<Long,String> root = (LeafNode<Long, String>) T.root;
+		assertTrue(root.children.size() == 2);
+		assertEquals(60, (long) root.children.get(0).key);
+		assertEquals(70, (long) root.children.get(1).key);		
+	}
+	
+	
+	@Test
+	public void testDelete6( )
+	{
+		BTree<Long,String> T = new BTree<Long, String>(3);
+		T.insert(new Long(10), "Ten");
+		T.insert(new Long(20), "Twenty");
+		T.insert(new Long(40), "Fourty");
+		T.insert(new Long(50), "Fifty");
+		T.insert(new Long(60), "Sixty");
+		T.insert(new Long(70), "Seventy");
+		T.insert(new Long(80), "Eight");
+		T.insert(new Long(90), "Niney");
+		T.insert(new Long(100), "Hundred");
+		T.insert(new Long(110), "Hundred-Ten");
+
+		//						  80
+		//         40       60         80        100
+		// 10  20     40 50     60 70      80 90      100 110  
+		
+		
+		// this will roll up the left child (10,20) node
+		// and should then pull-up the right child into roo
+		T.delete(new Long(10));
+		T.delete(new Long(20));
+		T.delete(new Long(40));
+		T.delete(new Long(50));
+		T.delete(new Long(60));
+		T.delete(new Long(70));
+		
+		//         100
+		// 80 90         100 110
+		assertTrue(T.root instanceof InnerNode);
+		InnerNode<Long,String> root = (InnerNode<Long, String>) T.root;
+		
+		
+		assertEquals(1, root.keys.size());
+		assertEquals(new Long(100), root.keys.get(0));
+		
+		assertEquals(2, root.children.size());
+		assertTrue(root.children.get(0) instanceof LeafNode);
+		assertTrue(root.children.get(1) instanceof LeafNode);
+		
+		LeafNode<Long,String> left = (LeafNode<Long,String>) root.children.get(0);
+		assertEquals(2, left.children.size());
+		assertEquals(new Long(80), left.children.get(0).key);
+		assertEquals(new Long(90), left.children.get(1).key);
+		
+		LeafNode<Long,String> right = (LeafNode<Long,String>) root.children.get(1);
+		assertEquals(2, right.children.size());
+		assertEquals(new Long(100), right.children.get(0).key);
+		assertEquals(new Long(110), right.children.get(1).key);
+		
+		T.delete(new Long(110));
+		T.delete(new Long(100));
+		T.delete(new Long(90));
+		T.delete(new Long(80));
+		
+		assertTrue(T.root == null);
+	}
 }
 
