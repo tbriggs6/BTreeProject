@@ -1,13 +1,16 @@
 package btree;
 
-public abstract class BTreeNode {
+public abstract class BTreeNode<K extends Comparable<K>, V>
+{
 
-	protected BTreeInnerNode parent;
+	abstract boolean isOverCapacity( );
 	
-	public BTreeNode(BTreeInnerNode parent)
-	{
-		this.parent = parent;
-	}
+	abstract boolean isComplete( );
 	
-	abstract protected Object find(long key);
+	abstract boolean isEmpty( );
+	
+	abstract NodeSplitResult split( );
+	
+	abstract K getMaxKey( );
+	abstract K getMinKey( );
 }
