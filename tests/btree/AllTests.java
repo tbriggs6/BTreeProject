@@ -6,6 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ TestBTree.class, TestEntry.class, TestInnerNode.class, TestLeafNode.class })
+
 public class AllTests {
 
 }

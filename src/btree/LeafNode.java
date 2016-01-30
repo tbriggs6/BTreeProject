@@ -53,7 +53,7 @@ class LeafNode<K extends Comparable<K>, V> extends BTreeNode<K,V> {
 		}
 		
 		
-		if (ENFORCE_UNIQUE_KEYS && (children.get(i).key.compareTo(key) == 0))
+		if (ENFORCE_UNIQUE_KEYS && (i < children.size()) && (children.get(i).key.compareTo(key) == 0))
 			throw new RuntimeException("Error - The key is already found in the tree");
 		
 		children.add(i, new Entry<K,V>( key, value));
